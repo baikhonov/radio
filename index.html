@@ -115,6 +115,7 @@
 </head>
 
 <body>
+
   <h1>🎧 Bachata Radio</h1>
 
   <div class="player-wrapper">
@@ -137,7 +138,46 @@
 
   <footer>© 2026 Bachata Radio by DJ Doodlez</footer>
 
+
   <script src="https://myradio24.com/player/player.js?v3.31" data-radio="bachatahit" data-interval="15" data-vmid="0" data-lang="ru">
+  </script>
+
+  <script>
+    (function() {
+      // Функция, которая будет обновлять заголовок
+      function updateTitleFromInfo(info) {
+        if (info && info.songs && info.songs.length > 0) {
+          // Берём ПОСЛЕДНИЙ элемент (текущий трек)
+          const lastIndex = info.songs.length - 1;
+          let currentSong = info.songs[lastIndex];
+          let songTitle = '';
+
+          if (Array.isArray(currentSong) && currentSong[1]) {
+            songTitle = currentSong[1];
+          } else if (currentSong && currentSong.song) {
+            songTitle = currentSong.song;
+          }
+
+          if (songTitle) {
+            document.title = `Bachata Radio - ${songTitle}`;
+          }
+        }
+      }
+
+      window.my_updateinfo_callback = function(info) {
+        updateTitleFromInfo(info);
+      };
+
+      if (window.MY && typeof window.MY.player_updateinfo === 'function') {
+        const originalFunc = window.MY.player_updateinfo;
+        window.MY.player_updateinfo = function(info) {
+          updateTitleFromInfo(info);
+          originalFunc(info);
+        };
+      }
+
+      console.log('Title updater initialized successfully');
+    })();
   </script>
 </body>
 
