@@ -170,10 +170,9 @@
 
   <script>
     (function() {
-      // Функция, которая будет обновлять заголовок
+      // Функция для обновления заголовка
       function updateTitleFromInfo(info) {
         if (info && info.songs && info.songs.length > 0) {
-          // Берём ПОСЛЕДНИЙ элемент (текущий трек)
           const lastIndex = info.songs.length - 1;
           let currentSong = info.songs[lastIndex];
           let songTitle = '';
@@ -185,24 +184,78 @@
           }
 
           if (songTitle) {
-            document.title = `Bachata Radio - ${songTitle}`;
+            document.title = `${songTitle}`;
           }
         }
       }
 
+      // Функция для обновления Media Session API с логотипом
+      function updateMediaSession(info) {
+        if (info && info.songs && info.songs.length > 0) {
+          const lastIndex = info.songs.length - 1;
+          let currentSong = info.songs[lastIndex];
+
+          let title = '';
+          let artist = '';
+
+          // Парсим данные трека (пытаемся разделить "Исполнитель - Название")
+          if (Array.isArray(currentSong)) {
+            const fullTitle = currentSong[1] || '';
+            const parts = fullTitle.split(' - ');
+            if (parts.length >= 2) {
+              artist = parts[0];
+              title = parts.slice(1).join(' - ');
+            } else {
+              title = fullTitle;
+              artist = '';
+            }
+          } else if (currentSong && currentSong.song) {
+            const fullTitle = currentSong.song || '';
+            const parts = fullTitle.split(' - ');
+            if (parts.length >= 2) {
+              artist = parts[0];
+              title = parts.slice(1).join(' - ');
+            } else {
+              title = fullTitle;
+              artist = '';
+            }
+          }
+
+          // Устанавливаем метаданные через Media Session API с логотипом радио
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: title || 'Bachata Radio',
+              artist: artist || 'Bachata Radio',
+              album: 'Bachata Radio',
+              artwork: [
+                {
+                  src: '/img/logo.webp', // путь к твоему логотипу
+                  sizes: '512x512',
+                  type: 'image/webp'
+                }
+              ]
+            });
+
+            navigator.mediaSession.playbackState = 'playing';
+          }
+        }
+      }
+
+      // Подключаем функции к колбэкам
       window.my_updateinfo_callback = function(info) {
         updateTitleFromInfo(info);
+        updateMediaSession(info);
       };
 
       if (window.MY && typeof window.MY.player_updateinfo === 'function') {
         const originalFunc = window.MY.player_updateinfo;
         window.MY.player_updateinfo = function(info) {
           updateTitleFromInfo(info);
+          updateMediaSession(info);
           originalFunc(info);
         };
       }
 
-      console.log('Title updater initialized successfully');
     })();
   </script>
 </body>
