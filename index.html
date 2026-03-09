@@ -189,37 +189,69 @@
         }
       }
 
+      // Функция для парсинга исполнителя и названия
+      function parseSongInfo(fullTitle) {
+        const parts = fullTitle.split(' - ');
+        if (parts.length >= 2) {
+          return {
+            artist: parts[0],
+            title: parts.slice(1).join(' - ')
+          };
+        }
+        return {
+          artist: '',
+          title: fullTitle
+        };
+      }
+
+      // Функция для управления воспроизведением
+      function controlPlayback(action) {
+        const playerDiv = document.getElementById('my_player');
+        if (!playerDiv) return;
+
+        // Устанавливаем текущий плеер
+        MY.cur = 'my_player';
+
+        switch (action) {
+          case 'play':
+            console.log('Play requested - restarting stream');
+            // Останавливаем текущий поток
+            $.player_play('stop');
+            // Небольшая задержка для перезапуска
+            setTimeout(function() {
+              MY.cur = 'my_player';
+              $.player_play('play');
+            }, 300);
+            break;
+
+          case 'pause':
+            console.log('Pause requested');
+            $.player_play('stop');
+            break;
+
+          case 'stop':
+            $.player_play('stop');
+            break;
+        }
+      }
+
       // Функция для обновления Media Session API с логотипом
       function updateMediaSession(info) {
         if (info && info.songs && info.songs.length > 0) {
           const lastIndex = info.songs.length - 1;
           let currentSong = info.songs[lastIndex];
 
-          let title = '';
-          let artist = '';
+          let fullTitle = '';
 
-          // Парсим данные трека (пытаемся разделить "Исполнитель - Название")
+          // Получаем полное название трека
           if (Array.isArray(currentSong)) {
-            const fullTitle = currentSong[1] || '';
-            const parts = fullTitle.split(' - ');
-            if (parts.length >= 2) {
-              artist = parts[0];
-              title = parts.slice(1).join(' - ');
-            } else {
-              title = fullTitle;
-              artist = '';
-            }
+            fullTitle = currentSong[1] || '';
           } else if (currentSong && currentSong.song) {
-            const fullTitle = currentSong.song || '';
-            const parts = fullTitle.split(' - ');
-            if (parts.length >= 2) {
-              artist = parts[0];
-              title = parts.slice(1).join(' - ');
-            } else {
-              title = fullTitle;
-              artist = '';
-            }
+            fullTitle = currentSong.song || '';
           }
+
+          // Парсим исполнителя и название
+          const { artist, title } = parseSongInfo(fullTitle);
 
           // Устанавливаем метаданные через Media Session API с логотипом радио
           if ('mediaSession' in navigator) {
@@ -229,7 +261,7 @@
               album: 'Bachata Radio',
               artwork: [
                 {
-                  src: '/img/logo.webp', // путь к твоему логотипу
+                  src: '/img/logo.webp',
                   sizes: '512x512',
                   type: 'image/webp'
                 }
@@ -237,6 +269,28 @@
             });
 
             navigator.mediaSession.playbackState = 'playing';
+
+            // Обработчики кнопок управления
+            try {
+              // Обработчик для play (возобновление)
+              navigator.mediaSession.setActionHandler('play', function() {
+                controlPlayback('play');
+              });
+
+              // Обработчик для pause
+              navigator.mediaSession.setActionHandler('pause', function() {
+                controlPlayback('pause');
+              });
+
+              // Отключаем ненужные кнопки
+              navigator.mediaSession.setActionHandler('previoustrack', null);
+              navigator.mediaSession.setActionHandler('nexttrack', null);
+              navigator.mediaSession.setActionHandler('seekbackward', null);
+              navigator.mediaSession.setActionHandler('seekforward', null);
+
+            } catch (e) {
+              console.log('MediaSession handlers not fully supported', e);
+            }
           }
         }
       }
@@ -255,6 +309,14 @@
           originalFunc(info);
         };
       }
+
+      // Дополнительно: обрабатываем закрытие/сворачивание вкладки
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden && 'mediaSession' in navigator) {
+          // Когда вкладка скрыта, состояние плеера всё ещё активно
+          navigator.mediaSession.playbackState = 'playing';
+        }
+      });
 
     })();
   </script>
