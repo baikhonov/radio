@@ -24,10 +24,27 @@
       min-height: 100vh;
     }
 
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .station-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 8px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    }
+
     h1 {
-      margin: 0 0 20px;
+      margin: 0;
       font-size: 2em;
-      /* animation: pulse 2s infinite ease-in-out; */
+      line-height: 1.2;
     }
 
     @keyframes pulse {
@@ -48,7 +65,7 @@
     }
 
     .player-wrapper {
-      margin: 10px 0;
+      margin: 0;
     }
 
     .songs-title {
@@ -57,7 +74,6 @@
       color: #ddd;
     }
 
-    /* Контейнер для последних песен */
     .my_lastsongs {
       max-width: 500px;
       width: 100%;
@@ -76,12 +92,11 @@
       text-decoration: underline;
     }
 
-    /* Скрытый шаблон для одного трека (требуется документацией) */
+
     .my_lastsonghtml {
       display: none;
     }
 
-    /* Стили для шаблонного элемента (на всякий случай, если он временно покажется) */
     .my_lastsonghtml>div {
       display: flex;
       gap: 8px;
@@ -91,7 +106,7 @@
     }
 
     footer {
-      margin-top: 30px;
+      margin-top: 20px;
       font-size: 0.75em;
       color: #888;
       opacity: 0.7;
@@ -107,6 +122,15 @@
         padding: 15px 10px;
       }
 
+      .header {
+        gap: 10px;
+      }
+
+      .station-logo {
+        width: 40px;
+        height: 40px;
+      }
+
       h1 {
         font-size: 1.6em;
       }
@@ -115,8 +139,10 @@
 </head>
 
 <body>
-
-  <h1>🎧 Bachata Radio</h1>
+  <div class="header">
+    <img src="/img/logo.webp" alt="Bachata Radio" class="station-logo">
+    <h1>Bachata Radio</h1>
+  </div>
 
   <div class="player-wrapper">
     <div id="my_player" class="my_player" data-player="energy" data-skin="blue" data-width="260" data-autoplay="1" data-volume="70" data-streamurl="https://myradio24.org/bachatahit">
