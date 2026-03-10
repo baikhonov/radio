@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Bachata Radio</title>
+  <title>Bachata Radio by DJ Doodlez</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
   <link rel="icon" href="./favicon.ico" type="image/x-icon">
@@ -170,152 +170,155 @@
 
   <script>
     (function() {
-      // Функция для обновления заголовка
-      function updateTitleFromInfo(info) {
-        if (info && info.songs && info.songs.length > 0) {
-          const lastIndex = info.songs.length - 1;
-          let currentSong = info.songs[lastIndex];
-          let songTitle = '';
 
-          if (Array.isArray(currentSong) && currentSong[1]) {
-            songTitle = currentSong[1];
-          } else if (currentSong && currentSong.song) {
-            songTitle = currentSong.song;
-          }
+      const defaultTitle = "Bachata Radio by DJ Doodlez";
 
-          if (songTitle) {
-            document.title = `${songTitle}`;
-          }
-        }
+      function playerStarted() {
+        if (!window.MY) return false;
+        if (!MY.players) return false;
+        if (!MY.players["my_player"]) return false;
+        return MY.players["my_player"].started === 1;
       }
 
-      // Функция для парсинга исполнителя и названия
+      function getSong(info) {
+
+        if (!info || !info.songs || !info.songs.length) return "";
+
+        const last = info.songs[info.songs.length - 1];
+
+        if (Array.isArray(last)) return last[1] || "";
+        if (last.song) return last.song;
+
+        return "";
+      }
+
       function parseSongInfo(fullTitle) {
+
         const parts = fullTitle.split(' - ');
+
         if (parts.length >= 2) {
           return {
             artist: parts[0],
             title: parts.slice(1).join(' - ')
           };
         }
+
         return {
           artist: '',
           title: fullTitle
         };
       }
 
-      // Функция для управления воспроизведением
-      function controlPlayback(action) {
-        const playerDiv = document.getElementById('my_player');
-        if (!playerDiv) return;
+      function updateMediaSession(fullTitle) {
 
-        // Устанавливаем текущий плеер
-        MY.cur = 'my_player';
+        if (!('mediaSession' in navigator)) return;
 
-        switch (action) {
-          case 'play':
-            console.log('Play requested - restarting stream');
-            // Останавливаем текущий поток
-            $.player_play('stop');
-            // Небольшая задержка для перезапуска
-            setTimeout(function() {
-              MY.cur = 'my_player';
-              $.player_play('play');
-            }, 300);
-            break;
+        const { artist, title } = parseSongInfo(fullTitle);
 
-          case 'pause':
-            console.log('Pause requested');
-            $.player_play('stop');
-            break;
-
-          case 'stop':
-            $.player_play('stop');
-            break;
-        }
-      }
-
-      // Функция для обновления Media Session API с логотипом
-      function updateMediaSession(info) {
-        if (info && info.songs && info.songs.length > 0) {
-          const lastIndex = info.songs.length - 1;
-          let currentSong = info.songs[lastIndex];
-
-          let fullTitle = '';
-
-          // Получаем полное название трека
-          if (Array.isArray(currentSong)) {
-            fullTitle = currentSong[1] || '';
-          } else if (currentSong && currentSong.song) {
-            fullTitle = currentSong.song || '';
-          }
-
-          // Парсим исполнителя и название
-          const { artist, title } = parseSongInfo(fullTitle);
-
-          // Устанавливаем метаданные через Media Session API с логотипом радио
-          if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-              title: title || 'Bachata Radio',
-              artist: artist || 'Bachata Radio',
-              album: 'Bachata Radio',
-              artwork: [
-                {
-                  src: '/img/logo.webp',
-                  sizes: '512x512',
-                  type: 'image/webp'
-                }
-              ]
-            });
-
-            navigator.mediaSession.playbackState = 'playing';
-
-            // Обработчики кнопок управления
-            try {
-              // Обработчик для play (возобновление)
-              navigator.mediaSession.setActionHandler('play', function() {
-                controlPlayback('play');
-              });
-
-              // Обработчик для pause
-              navigator.mediaSession.setActionHandler('pause', function() {
-                controlPlayback('pause');
-              });
-
-              // Отключаем ненужные кнопки
-              navigator.mediaSession.setActionHandler('previoustrack', null);
-              navigator.mediaSession.setActionHandler('nexttrack', null);
-              navigator.mediaSession.setActionHandler('seekbackward', null);
-              navigator.mediaSession.setActionHandler('seekforward', null);
-
-            } catch (e) {
-              console.log('MediaSession handlers not fully supported', e);
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: title || "Bachata Radio",
+          artist: artist || "Bachata Radio",
+          album: "Bachata Radio",
+          artwork: [
+            {
+              src: "/img/logo.webp",
+              sizes: "512x512",
+              type: "image/webp"
             }
-          }
+          ]
+        });
+
+        navigator.mediaSession.playbackState = playerStarted() ? "playing" : "paused";
+
+        try {
+
+          navigator.mediaSession.setActionHandler("play", function() {
+            $.player_play("play");
+          });
+
+          navigator.mediaSession.setActionHandler("pause", function() {
+            $.player_play("stop");
+          });
+
+          navigator.mediaSession.setActionHandler("previoustrack", null);
+          navigator.mediaSession.setActionHandler("nexttrack", null);
+          navigator.mediaSession.setActionHandler("seekbackward", null);
+          navigator.mediaSession.setActionHandler("seekforward", null);
+
+        } catch (e) {
+          console.log("MediaSession handlers not supported", e);
         }
       }
 
-      // Подключаем функции к колбэкам
-      window.my_updateinfo_callback = function(info) {
-        updateTitleFromInfo(info);
-        updateMediaSession(info);
-      };
+      function updateTitle(info) {
 
-      if (window.MY && typeof window.MY.player_updateinfo === 'function') {
-        const originalFunc = window.MY.player_updateinfo;
-        window.MY.player_updateinfo = function(info) {
-          updateTitleFromInfo(info);
-          updateMediaSession(info);
-          originalFunc(info);
+        if (!playerStarted()) {
+          document.title = defaultTitle;
+
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = "paused";
+          }
+
+          return;
+        }
+
+        const song = getSong(info);
+        if (!song) return;
+
+        document.title = song;
+
+        updateMediaSession(song);
+      }
+
+      function hookPlayer() {
+
+        if (!window.MY) return;
+
+        const original = MY.player_updateinfo;
+
+        if (!original) return;
+
+        MY.player_updateinfo = function(info) {
+
+          updateTitle(info);
+
+          return original.apply(this, arguments);
         };
       }
 
-      // Дополнительно: обрабатываем закрытие/сворачивание вкладки
-      document.addEventListener('visibilitychange', function() {
-        if (document.hidden && 'mediaSession' in navigator) {
-          // Когда вкладка скрыта, состояние плеера всё ещё активно
-          navigator.mediaSession.playbackState = 'playing';
-        }
+      function monitorStop() {
+
+        setInterval(function() {
+
+          if (!playerStarted()) {
+
+            if (document.title !== defaultTitle) {
+              document.title = defaultTitle;
+            }
+
+            if ('mediaSession' in navigator) {
+              navigator.mediaSession.playbackState = "paused";
+            }
+
+          }
+
+        }, 1000);
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+
+        document.title = defaultTitle;
+
+        const wait = setInterval(function() {
+
+          if (window.MY && MY.player_updateinfo) {
+            clearInterval(wait);
+            hookPlayer();
+            monitorStop();
+          }
+
+        }, 200);
+
       });
 
     })();
