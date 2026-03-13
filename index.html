@@ -274,6 +274,13 @@
 
       const defaultTitle = "Bachata Radio by DJ Doodlez";
 
+      function decodeHTMLEntities(text) {
+        if (!text) return '';
+        var textarea = document.createElement('textarea');
+        textarea.innerHTML = text;
+        return textarea.value;
+      }
+
       function playerStarted() {
         if (!window.MY) return false;
         if (!MY.players) return false;
@@ -314,7 +321,8 @@
 
         if (!('mediaSession' in navigator)) return;
 
-        const { artist, title } = parseSongInfo(fullTitle);
+        const decodedTitle = decodeHTMLEntities(fullTitle);
+        const { artist, title } = parseSongInfo(decodedTitle);
 
         navigator.mediaSession.metadata = new MediaMetadata({
           title: title || "Bachata Radio",
@@ -366,7 +374,8 @@
         const song = getSong(info);
         if (!song) return;
 
-        document.title = song;
+        const decodedSong = decodeHTMLEntities(song);
+        document.title = decodedSong;
 
         updateMediaSession(song);
       }
