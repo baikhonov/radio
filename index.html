@@ -360,14 +360,11 @@
       }
 
       function updateTitle(info) {
-
         if (!playerStarted()) {
           document.title = defaultTitle;
-
           if ('mediaSession' in navigator) {
             navigator.mediaSession.playbackState = "paused";
           }
-
           return;
         }
 
@@ -375,7 +372,15 @@
         if (!song) return;
 
         const decodedSong = decodeHTMLEntities(song);
-        document.title = decodedSong;
+
+        const parts = decodedSong.split(' - ');
+        if (parts.length >= 2) {
+          const artist = parts[0];
+          const title = parts.slice(1).join(' - ');
+          document.title = `${title} • ${artist}`;
+        } else {
+          document.title = decodedSong;
+        }
 
         updateMediaSession(song);
       }
