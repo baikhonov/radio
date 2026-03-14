@@ -264,6 +264,10 @@ a {
     font-size: 0.8rem;
   }
 
+  .service-links a:hover {
+    transform: none;
+  }
+
   .service-links svg {
     width: 20px;
     height: 20px;
