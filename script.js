@@ -40,7 +40,6 @@
 
     function updateCurrentSongLinks(songTitle, songEncode) {
         const linksBlock = document.getElementById('currentSongLinks');
-        const titleElement = document.querySelector('.current-song-title');
 
         if (!songTitle || !playerStarted()) {
             linksBlock.style.display = 'none';
