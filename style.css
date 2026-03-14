@@ -73,6 +73,10 @@ h1 {
   margin-bottom: 7px;
 }
 
+.my_songdivs:nth-child(n + 6) {
+  display: none;
+}
+
 .song-title {
   color: #ffb347;
 }
