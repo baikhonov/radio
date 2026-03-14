@@ -73,10 +73,6 @@ h1 {
   margin-bottom: 7px;
 }
 
-.my_songdivs:nth-child(n + 6) {
-  display: none;
-}
-
 .song-title {
   color: #ffb347;
 }
@@ -120,6 +116,10 @@ a {
 
   h1 {
     font-size: 1.6em;
+  }
+
+  .my_songdivs:nth-child(n + 7) {
+    display: none;
   }
 }
 
