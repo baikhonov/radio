@@ -204,7 +204,7 @@ a {
   background: rgba(255, 180, 71, 0.08);
   border-radius: 12px;
   padding: 10px 15px;
-  margin: 20px 0;
+  margin: 20px 0 0;
   width: 100%;
   max-width: 500px;
   backdrop-filter: blur(2px);
