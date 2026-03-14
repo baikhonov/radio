@@ -254,11 +254,6 @@ a {
   height: 24px;
 }
 
-.service-links span {
-  position: relative;
-  margin-top: -1px;
-}
-
 @media (max-width: 480px) {
   .service-links {
     gap: 12px;
