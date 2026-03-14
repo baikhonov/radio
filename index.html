@@ -10,214 +10,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2c2c2c">
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 20px 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .station-logo {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      border-radius: 8px;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 2em;
-      line-height: 1.2;
-    }
-
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-        transform: scale(1);
-      }
-
-      50% {
-        opacity: 0.6;
-        transform: scale(1.02);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .player-wrapper {
-      margin: 0;
-    }
-
-    .songs-title {
-      margin: 20px 0 10px;
-      font-weight: 500;
-      color: #ddd;
-    }
-
-    .my_lastsongs {
-      max-width: 500px;
-      width: 100%;
-    }
-
-    .my_songdivs {
-      margin-bottom: 7px;
-    }
-
-    .my_lastsongs a {
-      color: #ffb347 !important;
-      text-decoration: none;
-    }
-
-    .my_lastsongs a:hover {
-      text-decoration: underline;
-    }
-
-
-    .my_lastsonghtml {
-      display: none;
-    }
-
-    .my_lastsonghtml>div {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      text-align: left;
-      margin: 3px;
-    }
-
-    footer {
-      font-size: 0.75em;
-      color: #888;
-      opacity: 0.7;
-    }
-
-    a {
-      color: white !important;
-      text-decoration: none;
-    }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 15px 10px;
-      }
-
-      .header {
-        gap: 10px;
-      }
-
-      .station-logo {
-        width: 40px;
-        height: 40px;
-      }
-
-      h1 {
-        font-size: 1.6em;
-      }
-    }
-
-    .social-section {
-      margin-top: 30px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    .social-text {
-      color: #aaa;
-      font-size: 0.9em;
-      margin-top: 0;
-      margin-bottom: 15px;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .social-link {
-      display: inline-block;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      opacity: 0.8;
-    }
-
-    .social-link:hover {
-      transform: scale(1.1);
-      opacity: 1;
-    }
-
-    .social-link svg {
-      width: 48px;
-      height: 48px;
-    }
-
-    .social-link.vk svg {
-      width: 53px;
-      height: auto;
-    }
-
-    .social-link.vk {
-      color: #4c75a3;
-    }
-
-    .social-link.telegram {
-      color: #26a5e4;
-    }
-
-    @media (max-width: 480px) {
-      .social-section {
-        margin-top: 20px;
-        margin-bottom: 10px;
-      }
-
-      .social-text {
-        font-size: 0.85em;
-        margin-bottom: 10px;
-      }
-
-      .social-links {
-        gap: 15px;
-      }
-
-      .social-link {
-        opacity: 1;
-      }
-
-      .social-link svg {
-        width: 35px;
-        height: 35px;
-      }
-
-      .social-link.vk svg {
-        width: 40px;
-        height: auto;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -231,14 +24,41 @@
     </div>
   </div>
 
+  <!-- Блок ссылок для текущей песни -->
+  <div class="current-song-links" id="currentSongLinks" style="display: none;">
+    <p class="current-song-title">🎵 Найти этот трек в:</p>
+    <div class="service-links">
+      <a href="#" target="_blank" class="service-icon youtube" id="youtubeLink">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" viewBox="0 0 48 48">
+          <path fill="#FF3D00" d="M43.2,33.9c-0.4,2.1-2.1,3.7-4.2,4c-3.3,0.5-8.8,1.1-15,1.1c-6.1,0-11.6-0.6-15-1.1c-2.1-0.3-3.8-1.9-4.2-4C4.4,31.6,4,28.2,4,24c0-4.2,0.4-7.6,0.8-9.9c0.4-2.1,2.1-3.7,4.2-4C12.3,9.6,17.8,9,24,9c6.2,0,11.6,0.6,15,1.1c2.1,0.3,3.8,1.9,4.2,4c0.4,2.3,0.9,5.7,0.9,9.9C44,28.2,43.6,31.6,43.2,33.9z"></path>
+          <path fill="#FFF" d="M20 31L20 17 32 24z"></path>
+        </svg>
+        <span>YouTube</span>
+      </a>
+      <a href="#" target="_blank" class="service-icon vk" id="vkLink">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" viewBox="0 0 48 48">
+          <path fill="#1976d2" d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5 V37z"></path>
+          <path fill="#fff" d="M35.937,18.041c0.046-0.151,0.068-0.291,0.062-0.416C35.984,17.263,35.735,17,35.149,17h-2.618 c-0.661,0-0.966,0.4-1.144,0.801c0,0-1.632,3.359-3.513,5.574c-0.61,0.641-0.92,0.625-1.25,0.625C26.447,24,26,23.786,26,23.199 v-5.185C26,17.32,25.827,17,25.268,17h-4.649C20.212,17,20,17.32,20,17.641c0,0.667,0.898,0.827,1,2.696v3.623 C21,24.84,20.847,25,20.517,25c-0.89,0-2.642-3-3.815-6.932C16.448,17.294,16.194,17,15.533,17h-2.643 C12.127,17,12,17.374,12,17.774c0,0.721,0.6,4.619,3.875,9.101C18.25,30.125,21.379,32,24.149,32c1.678,0,1.85-0.427,1.85-1.094 v-2.972C26,27.133,26.183,27,26.717,27c0.381,0,1.158,0.25,2.658,2c1.73,2.018,2.044,3,3.036,3h2.618 c0.608,0,0.957-0.255,0.971-0.75c0.003-0.126-0.015-0.267-0.056-0.424c-0.194-0.576-1.084-1.984-2.194-3.326 c-0.615-0.743-1.222-1.479-1.501-1.879C32.062,25.36,31.991,25.176,32,25c0.009-0.185,0.105-0.361,0.249-0.607 C32.223,24.393,35.607,19.642,35.937,18.041z"></path>
+        </svg>
+        <span>VK</span>
+      </a>
+      <a href="#" target="_blank" class="service-icon spotify" id="spotifyLink">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" viewBox="0 0 48 48">
+          <path fill="#8bc34a" d="M24.001,4c-11.077,0-20,8.923-20,20s8.923,20,20,20c11.076,0,20-8.923,20-20S35.077,4,24.001,4z"></path>
+          <path fill="#fff" d="M31.747,33.915c-0.292,0-0.585-0.145-0.877-0.292c-2.777-1.607-6.139-2.484-9.792-2.484c-2.047,0-4.093,0.291-5.993,0.73c-0.292,0-0.731,0.146-0.877,0.146c-0.731,0-1.169-0.586-1.169-1.17c0-0.73,0.438-1.17,1.023-1.314c2.338-0.586,4.677-0.877,7.161-0.877c4.093,0,7.893,1.021,11.108,2.924c0.438,0.291,0.731,0.584,0.731,1.314C32.916,33.478,32.331,33.915,31.747,33.915z M33.793,28.945c-0.438,0-0.73-0.144-1.023-0.291c-3.068-1.9-7.308-3.071-12.13-3.071c-2.339,0-4.531,0.293-6.139,0.733c-0.439,0.144-0.585,0.144-0.877,0.144c-0.877,0-1.462-0.73-1.462-1.461c0-0.877,0.439-1.316,1.169-1.607c2.192-0.584,4.385-1.023,7.454-1.023c4.97,0,9.793,1.17,13.593,3.507c0.584,0.291,0.877,0.877,0.877,1.461C35.255,28.215,34.67,28.945,33.793,28.945z M36.132,23.101c-0.438,0-0.585-0.146-1.023-0.291c-3.508-2.047-8.769-3.217-13.885-3.217c-2.631,0-5.262,0.293-7.6,0.877c-0.293,0-0.585,0.146-1.023,0.146c-1.023,0.146-1.754-0.73-1.754-1.754c0-1.023,0.585-1.607,1.315-1.754c2.777-0.877,5.7-1.17,9.062-1.17c5.554,0,11.4,1.17,15.785,3.654c0.584,0.293,1.022,0.877,1.022,1.754C37.886,22.369,37.154,23.101,36.132,23.101z"></path>
+        </svg>
+        <span>Spotify</span>
+      </a>
+    </div>
+  </div>
+
   <h2 class="songs-title">Последние песни</h2>
 
   <div class="my_lastsongs" data-revert="1">
     <div class="my_lastsonghtml">
       <div>
         <span>%songtime%</span>
-        <a href="https://www.youtube.com/results?search_query=%songencode%" target="_blank" title="YouTube">%song%</a>
-        <span class='vm_postLikes vm_likes vm_like_318761878_%songid%' data-likeid='318761878_%songid%'></span>
+        <span class="song-title">%song%</span>
       </div>
     </div>
   </div>
@@ -265,179 +85,10 @@
 
   <footer>© 2026 Bachata Radio by DJ Doodlez</footer>
 
-
   <script src="https://myradio24.com/player/player.js?v3.31" data-radio="bachatahit" data-interval="15" data-vmid="0" data-lang="ru">
   </script>
 
-  <script>
-    (function() {
-
-      const defaultTitle = "Bachata Radio by DJ Doodlez";
-
-      function decodeHTMLEntities(text) {
-        if (!text) return '';
-        var textarea = document.createElement('textarea');
-        textarea.innerHTML = text;
-        return textarea.value;
-      }
-
-      function playerStarted() {
-        if (!window.MY) return false;
-        if (!MY.players) return false;
-        if (!MY.players["my_player"]) return false;
-        return MY.players["my_player"].started === 1;
-      }
-
-      function getSong(info) {
-
-        if (!info || !info.songs || !info.songs.length) return "";
-
-        const last = info.songs[info.songs.length - 1];
-
-        if (Array.isArray(last)) return last[1] || "";
-        if (last.song) return last.song;
-
-        return "";
-      }
-
-      function parseSongInfo(fullTitle) {
-
-        const parts = fullTitle.split(' - ');
-
-        if (parts.length >= 2) {
-          return {
-            artist: parts[0],
-            title: parts.slice(1).join(' - ')
-          };
-        }
-
-        return {
-          artist: '',
-          title: fullTitle
-        };
-      }
-
-      function updateMediaSession(fullTitle) {
-
-        if (!('mediaSession' in navigator)) return;
-
-        const decodedTitle = decodeHTMLEntities(fullTitle);
-        const { artist, title } = parseSongInfo(decodedTitle);
-
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: title || "Bachata Radio",
-          artist: artist || "Bachata Radio",
-          album: "Bachata Radio",
-          artwork: [
-            {
-              src: "/img/cover.webp",
-              sizes: "512x512",
-              type: "image/webp"
-            }
-          ]
-        });
-
-        navigator.mediaSession.playbackState = playerStarted() ? "playing" : "paused";
-
-        try {
-
-          navigator.mediaSession.setActionHandler("play", function() {
-            $.player_play("play");
-          });
-
-          navigator.mediaSession.setActionHandler("pause", function() {
-            $.player_play("stop");
-          });
-
-          navigator.mediaSession.setActionHandler("previoustrack", null);
-          navigator.mediaSession.setActionHandler("nexttrack", null);
-          navigator.mediaSession.setActionHandler("seekbackward", null);
-          navigator.mediaSession.setActionHandler("seekforward", null);
-
-        } catch (e) {
-          console.log("MediaSession handlers not supported", e);
-        }
-      }
-
-      function updateTitle(info) {
-        if (!playerStarted()) {
-          document.title = defaultTitle;
-          if ('mediaSession' in navigator) {
-            navigator.mediaSession.playbackState = "paused";
-          }
-          return;
-        }
-
-        const song = getSong(info);
-        if (!song) return;
-
-        const decodedSong = decodeHTMLEntities(song);
-
-        const parts = decodedSong.split(' - ');
-        if (parts.length >= 2) {
-          const artist = parts[0];
-          const title = parts.slice(1).join(' - ');
-          document.title = `${title} • ${artist}`;
-        } else {
-          document.title = decodedSong;
-        }
-
-        updateMediaSession(song);
-      }
-
-      function hookPlayer() {
-
-        if (!window.MY) return;
-
-        const original = MY.player_updateinfo;
-
-        if (!original) return;
-
-        MY.player_updateinfo = function(info) {
-
-          updateTitle(info);
-
-          return original.apply(this, arguments);
-        };
-      }
-
-      function monitorStop() {
-
-        setInterval(function() {
-
-          if (!playerStarted()) {
-
-            if (document.title !== defaultTitle) {
-              document.title = defaultTitle;
-            }
-
-            if ('mediaSession' in navigator) {
-              navigator.mediaSession.playbackState = "paused";
-            }
-
-          }
-
-        }, 1000);
-      }
-
-      document.addEventListener("DOMContentLoaded", function() {
-
-        document.title = defaultTitle;
-
-        const wait = setInterval(function() {
-
-          if (window.MY && MY.player_updateinfo) {
-            clearInterval(wait);
-            hookPlayer();
-            monitorStop();
-          }
-
-        }, 200);
-
-      });
-
-    })();
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>
