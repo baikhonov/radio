@@ -81,6 +81,10 @@ h1 {
   display: none;
 }
 
+.my_songdivs:nth-child(n + 6) {
+  display: none;
+}
+
 .my_lastsonghtml > div {
   display: flex;
   gap: 8px;
@@ -117,14 +121,10 @@ a {
   h1 {
     font-size: 1.6em;
   }
-
-  .my_songdivs:nth-child(n + 6) {
-    display: none;
-  }
 }
 
 .social-section {
-  margin-top: 30px;
+  margin-top: auto;
   margin-bottom: 15px;
   text-align: center;
 }
