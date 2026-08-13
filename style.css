@@ -161,6 +161,15 @@ a {
   height: 48px;
 }
 
+.social-link.max {
+  margin-left: 5px;
+}
+
+.social-link.max svg {
+  width: 44px;
+  height: 44px;
+}
+
 .social-link.vk svg {
   width: 53px;
   height: auto;
