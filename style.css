@@ -203,8 +203,13 @@ a {
   }
 
   .social-link svg {
-    width: 35px !important;
-    height: 35px !important;
+    width: 35px;
+    height: 35px;
+  }
+
+  .social-link.max svg {
+    width: 28px;
+    height: 28px;
   }
 
   .social-link.vk svg {
